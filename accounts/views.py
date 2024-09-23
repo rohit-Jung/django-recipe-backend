@@ -81,41 +81,60 @@ def login_view(request):
         refresh_token = tokens.get('refresh')
         
         response = Response({
-            'data' : serializer.validated_data,
+            'data': serializer.validated_data,
             'csrf_token': get_token(request), 
         }, status=status.HTTP_200_OK)
-        
-        # Set tokens in cookies
+
+        # Setting cookies
         response.set_cookie(
             'access_token',
             str(access_token),
             httponly=True,
-            secure=True,  # Use this in production with HTTPS
+            secure=request.is_secure(),  # Use HTTPS setting dynamically
             samesite='None',
         )
         response.set_cookie(
             'refresh_token',
             str(refresh_token),
             httponly=True,
-            secure=True,  # Use this in production with HTTPS
+            secure=request.is_secure(),  # Use HTTPS setting dynamically
             samesite='None',
         )
         
-        # Set CSRF token in the response
+        # Set CSRF token
         csrf_token = get_token(request)
         response.set_cookie(
             'csrftoken',
             csrf_token,
-            httponly=False,  # CSRF token must be accessible by JavaScript
-            secure=True,  # Use this in production with HTTPS
+            httponly=False,
+            secure=request.is_secure(),
             samesite='None',
         )
 
-        
         login(request, user)
         return response
 
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def logout(request):
+    try:
+        refresh_token = request.data.get('refresh')
+        if refresh_token:
+            RefreshToken(refresh_token).blacklist()
+
+        django_logout(request)
+        
+        response = Response({'message': 'Successfully logged out'}, status=status.HTTP_205_RESET_CONTENT)
+        
+        # Clear cookies
+        response.set_cookie('access_token', '', httponly=True, secure=True, samesite='None')
+        response.set_cookie('refresh_token', '', httponly=True, secure=True, samesite='None')
+        response.set_cookie('csrftoken', '', httponly=False, secure=True, samesite='None')
+        
+        return response
+    except Exception as e:
+        return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
@@ -141,8 +160,6 @@ def get_current_user(request):
 
     return Response(response_data, status=status.HTTP_200_OK)
 
-@api_view(['POST'])
-def logout(request):
     """
     Log out and blacklist the refresh token.
     """
@@ -269,4 +286,3 @@ def user_detail(request, pk):
             return Response(status=status.HTTP_403_FORBIDDEN)
         user.delete()
         return Response({"message": "User deleted"},  status=status.HTTP_204_NO_CONTENT)
-
