@@ -22,7 +22,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('SECRET_KEY', 'your-default-secret-key')
 DEBUG = os.environ.get("DEBUG", "False").lower() == "true"
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(" ")
-
+print("ALLOWED_HOSTS", ALLOWED_HOSTS)
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -115,13 +115,13 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
-    "https://recipe-app-frontend-alpha.vercel.app"
+    "https://recipe-app-frontend-alpha.vercel.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
-    "https://recipe-app-frontend-alpha.vercel.app"
+    "https://recipe-app-frontend-alpha.vercel.app",
 ]
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 CSRF_COOKIE_SAMESITE = "None"
