@@ -117,17 +117,19 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",
     "https://recipe-app-frontend-alpha.vercel.app",
 ]
+
 CORS_ALLOW_CREDENTIALS = True
-CSRF_COOKIE_HTTP_ONLY = True
+CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
+
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",
     "https://recipe-app-frontend-alpha.vercel.app",
 ]
-CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 CSRF_COOKIE_SAMESITE = "None"
 SESSION_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
+
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),
