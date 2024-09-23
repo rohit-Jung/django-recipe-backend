@@ -114,12 +114,14 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "https://recipe-app-frontend-alpha.vercel.app"
 ]
 CORS_ALLOW_CREDENTIALS = True
 CSRF_COOKIE_HTTP_ONLY = True
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:5173"
+    "http://localhost:5173",
+    "https://recipe-app-frontend-alpha.vercel.app"
 ]
 CORS_EXPOSE_HEADERS = ["Content-Type", "X-CSRFToken"]
 CSRF_COOKIE_SAMESITE = "None"
